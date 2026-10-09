@@ -1,0 +1,17 @@
+{
+  "name": "MEU BOLSO-NARO",
+  "short_name": "MEU BOLSO",
+  "description": "App de controle de gastos pessoais",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1e3d",
+  "theme_color": "#0b1e3d",
+  "icons": [
+    {
+      "src": "icone.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

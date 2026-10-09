@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MEU BOLSO-NARO</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icone.svg">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="configuracao.js"></script>
+</head>
+<body>
+  <div id="app-container">
+
+    <!-- Mensagens Globais de Erro / Sucesso -->
+    <div id="mensagemFeedback" class="mensagem oculto"></div>
+
+    <!-- Tela de Autenticação -->
+    <section id="telaAuth" class="card">
+      <div class="auth-header">
+        <h1>MEU BOLSO-NARO</h1>
+        <p>Controle financeiro simples e direto</p>
+      </div>
+      <form id="formAuth" onsubmit="return false;">
+        <div class="campo-grupo">
+          <label for="authEmail">E-mail</label>
+          <input type="email" id="authEmail" placeholder="seu@email.com" required autocomplete="email">
+        </div>
+        <div class="campo-grupo">
+          <label for="authSenha">Senha</label>
+          <input type="password" id="authSenha" placeholder="Digite sua senha" required autocomplete="current-password">
+        </div>
+        <div class="botoes-auth">
+          <button type="button" id="btnEntrar" class="btn btn-primario">Entrar</button>
+          <button type="button" id="btnCriarConta" class="btn btn-secundario">Criar conta</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Tela Principal do App -->
+    <main id="telaPrincipal" class="oculto">
+      <!-- Cabeçalho -->
+      <header class="header-principal">
+        <h1>MEU BOLSO-NARO</h1>
+        <button id="btnSair" class="btn-sair">Sair</button>
+      </header>
+
+      <!-- Quanto já gastei no mês (Destaque nos primeiros 5 segundos) -->
+      <section class="card-destaque">
+        <div class="destaque-label">Total gasto no mês</div>
+        <div id="totalMes" class="destaque-valor">R$ 0,00</div>
+      </section>
+
+      <!-- Cartão Resumo da Semana (escondido se não houver) -->
+      <section id="cardResumo" class="card oculto">
+        <h2 class="titulo-secao">Resumo da semana</h2>
+        <p id="textoResumo" class="resumo-texto"></p>
+      </section>
+
+      <!-- Barras por Categoria -->
+      <section class="card">
+        <h2 class="titulo-secao">Gastos por Categoria</h2>
+        <div id="listaBarras" class="lista-barras">
+          <!-- Renderizado dinamicamente -->
+        </div>
+      </section>
+
+      <!-- Formulário Lançar à mão -->
+      <section class="card">
+        <h2 class="titulo-secao">Lançar à mão</h2>
+        <form id="formLancarGasto">
+          <div class="campo-grupo">
+            <label for="gastoValor">Valor (R$)</label>
+            <input type="number" id="gastoValor" step="0.01" min="0.01" placeholder="0,00" required>
+          </div>
+          <div class="campo-grupo">
+            <label for="gastoDescricao">Onde ou com o quê</label>
+            <input type="text" id="gastoDescricao" placeholder="Ex: Mercado da Esquina" required>
+          </div>
+          <div class="campo-grupo">
+            <label for="gastoCategoria">Categoria</label>
+            <select id="gastoCategoria" required>
+              <!-- Preenchido via configuracao.js -->
+            </select>
+          </div>
+          <div class="campo-grupo">
+            <label for="gastoData">Data</label>
+            <input type="date" id="gastoData" required>
+          </div>
+          <button type="submit" id="btnSalvarGasto" class="btn btn-primario" style="width: 100%; margin-top: 6px;">
+            Salvar gasto
+          </button>
+        </form>
+      </section>
+
+      <!-- Espaço do Assistente -->
+      <section class="card">
+        <h2 class="titulo-secao">Assistente de Gastos</h2>
+        <div class="assistente-controles">
+          <div class="assistente-input-wrapper">
+            <input type="text" id="assistenteTexto" placeholder="Escreva sobre um gasto...">
+            <button type="button" id="btnAssistenteEnviar" class="btn btn-primario">Enviar</button>
+          </div>
+          <label class="btn-foto" for="inputFotoCupom">
+            Foto do cupom
+          </label>
+          <input type="file" id="inputFotoCupom" accept="image/*" capture="environment" class="oculto">
+          <div id="assistenteMensagem" class="mensagem aviso oculto"></div>
+        </div>
+      </section>
+
+      <!-- Lista dos Gastos do Mês -->
+      <section class="card">
+        <h2 class="titulo-secao">Gastos do Mês</h2>
+        <div id="listaGastos" class="lista-gastos">
+          <!-- Renderizado dinamicamente -->
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
