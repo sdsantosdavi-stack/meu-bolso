@@ -460,20 +460,137 @@
     alternarTelas(false);
   });
 
-  // Assistente: Enviar texto e Foto do cupom
-  function acionarAssistente() {
-    assistenteMensagem.textContent = "o assistente chega no próximo exercício.";
-    assistenteMensagem.classList.remove("oculto");
-    assistenteTexto.value = "";
+  // Assistente: redimensionar imagem no navegador para no máximo 1600 px, JPEG
+  function redimensionarImagem(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 1600;
+          let largura = img.width;
+          let altura = img.height;
+
+          if (largura > MAX || altura > MAX) {
+            if (largura > altura) {
+              altura = Math.round((altura * MAX) / largura);
+              largura = MAX;
+            } else {
+              largura = Math.round((largura * MAX) / altura);
+              altura = MAX;
+            }
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = largura;
+          canvas.height = altura;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, largura, altura);
+
+          // Converte para JPEG base64 (sem o prefixo data:...)
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+          const base64 = dataUrl.split(",")[1];
+          resolve(base64);
+        };
+        img.onerror = () => reject(new Error("Não foi possível ler a imagem."));
+        img.src = e.target.result;
+      };
+      reader.onerror = () => reject(new Error("Não foi possível ler o arquivo."));
+      reader.readAsDataURL(file);
+    });
   }
 
-  btnAssistenteEnviar.addEventListener("click", acionarAssistente);
+  // Exibe mensagem no painel do assistente
+  function exibirMensagemAssistente(texto, tipo = "aviso") {
+    assistenteMensagem.textContent = texto;
+    assistenteMensagem.className = `mensagem ${tipo}`;
+    assistenteMensagem.classList.remove("oculto");
+  }
+
+  // Envia requisição ao assistente
+  async function enviarParaAssistente(texto, imagemBase64) {
+    // Obtém o token da sessão atual
+    const { data: sessaoData } = await supabase.auth.getSession();
+    const token = sessaoData?.session?.access_token;
+    if (!token) {
+      exibirMensagemAssistente("Sua sessão expirou. Faça login novamente.", "erro");
+      return;
+    }
+
+    const categorias = config.CATEGORIAS || [];
+
+    const corpo = {
+      categorias: categorias,
+    };
+    if (texto) corpo.mensagem = texto;
+    if (imagemBase64) {
+      corpo.imagem = imagemBase64;
+      corpo.mime = "image/jpeg";
+    }
+
+    exibirMensagemAssistente("Processando...", "aviso");
+
+    try {
+      const res = await fetch("/api/assistente", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(corpo),
+      });
+
+      const dados = await res.json();
+
+      if (!res.ok) {
+        exibirMensagemAssistente(dados.erro || "Erro ao falar com o assistente.", "erro");
+        return;
+      }
+
+      exibirMensagemAssistente(dados.resposta, "sucesso");
+
+      // Se um gasto foi registrado, atualiza a lista e o total
+      if (dados.acao === "gasto_registrado") {
+        carregarDadosDoMes();
+      }
+    } catch (err) {
+      exibirMensagemAssistente(
+        "Falha de conexão com o assistente. Verifique sua internet e tente novamente.",
+        "erro"
+      );
+    }
+  }
+
+  // Botão Enviar do assistente
+  btnAssistenteEnviar.addEventListener("click", async () => {
+    const texto = assistenteTexto.value.trim();
+    if (!texto) {
+      exibirMensagemAssistente("Escreva um gasto ou uma pergunta.", "erro");
+      return;
+    }
+    assistenteTexto.value = "";
+    await enviarParaAssistente(texto, null);
+  });
 
   // Regra fundamental do briefing: O app NUNCA guarda a foto do cupom.
-  // A foto não é enviada para o banco nem armazenada; o input é imediatamente limpo.
-  inputFotoCupom.addEventListener("change", () => {
-    inputFotoCupom.value = "";
-    acionarAssistente();
+  // A foto é reduzida no navegador, enviada para extração via Gemini, e descartada.
+  // O input é imediatamente limpo após a leitura.
+  inputFotoCupom.addEventListener("change", async () => {
+    const arquivo = inputFotoCupom.files[0];
+    inputFotoCupom.value = ""; // Limpa imediatamente
+
+    if (!arquivo) return;
+
+    try {
+      exibirMensagemAssistente("Reduzindo imagem...", "aviso");
+      const base64 = await redimensionarImagem(arquivo);
+      await enviarParaAssistente(null, base64);
+    } catch (err) {
+      exibirMensagemAssistente(
+        err.message || "Não foi possível processar a foto. Tente novamente.",
+        "erro"
+      );
+    }
   });
 
   // Inicialização do app
