@@ -301,8 +301,8 @@ Regras:
       const valorNum = Number(valor);
 
       // --- Verificação de duplicidade ---
-      // Consulta se já existe um gasto com mesma data, valor e descrição
-      const urlCheck = `${SUPABASE_URL}/rest/v1/gastos?select=id&data=eq.${dataGasto}&valor=eq.${valorNum}&descricao=eq.${encodeURIComponent(descricao)}`;
+      // Consulta se já existe um gasto com mesma data e valor
+      const urlCheck = `${SUPABASE_URL}/rest/v1/gastos?select=id&data=eq.${dataGasto}&valor=eq.${valorNum}`;
       const resCheck = await fetch(urlCheck, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -313,7 +313,7 @@ Regras:
         const duplicados = await resCheck.json();
         if (duplicados && duplicados.length > 0) {
           return resposta(200, {
-            resposta: `Parece que esse gasto (${formatarMoeda(valor)} em ${descricao}) já foi lançado neste dia.`,
+            resposta: `Parece que esse gasto de ${formatarMoeda(valor)} já foi lançado no dia ${dataGasto.split("-").reverse().join("/")}.`,
             acao: null,
           });
         }
