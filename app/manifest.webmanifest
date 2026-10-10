@@ -4,8 +4,8 @@
   "description": "App de controle de gastos pessoais",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b1e3d",
-  "theme_color": "#0b1e3d",
+  "background_color": "#f8fafc",
+  "theme_color": "#008c45",
   "icons": [
     {
       "src": "icone.svg",

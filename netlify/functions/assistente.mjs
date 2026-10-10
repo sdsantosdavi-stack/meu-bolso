@@ -315,6 +315,7 @@ Regras:
           return resposta(200, {
             resposta: `Parece que esse gasto de ${formatarMoeda(valor)} já foi lançado no dia ${dataGasto.split("-").reverse().join("/")}.`,
             acao: null,
+            duplicado: true,
           });
         }
       }

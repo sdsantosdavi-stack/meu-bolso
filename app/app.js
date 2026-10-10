@@ -547,7 +547,19 @@
         return;
       }
 
-      exibirMensagemAssistente(dados.resposta, "sucesso");
+      // Define a cor da mensagem:
+      // Se já foi lançado (duplicado), exibe na cor vermelha ('erro')
+      // Se foi registrado com sucesso, exibe na cor verde ('sucesso')
+      // Caso contrário, cor de aviso ('aviso')
+      let tipoMsg = "aviso";
+      const textoLower = (dados.resposta || "").toLowerCase();
+      if (dados.duplicado || textoLower.includes("já foi lançado") || textoLower.includes("ja foi lancado")) {
+        tipoMsg = "erro";
+      } else if (dados.acao === "gasto_registrado") {
+        tipoMsg = "sucesso";
+      }
+
+      exibirMensagemAssistente(dados.resposta, tipoMsg);
 
       // Se um gasto foi registrado, atualiza a lista e o total
       if (dados.acao === "gasto_registrado") {

@@ -1,14 +1,26 @@
 :root {
-  --azul-escuro-fundo: #07152b;
-  --azul-escuro-card: #0d2246;
-  --azul-escuro-suave: #16366b;
-  --azul-destaque: #1d4ed8;
-  --azul-hover: #2563eb;
-  --branco: #ffffff;
-  --cinza-claro: #f1f5f9;
-  --cinza-texto: #cbd5e1;
-  --vermelho-apagar: #ef4444;
-  --vermelho-apagar-hover: #dc2626;
+  /* Cores da Bandeira da Itália */
+  --verde-italia: #008c45;
+  --verde-italia-hover: #007338;
+  --verde-italia-suave: #e8f5e9;
+  --verde-italia-texto: #0e6333;
+
+  --branco-puro: #ffffff;
+  --cinza-fundo: #f8fafc;
+  --cinza-card: #ffffff;
+  --cinza-borda: #e2e8f0;
+  --cinza-hover: #f1f5f9;
+
+  --vermelho-italia: #cd212a;
+  --vermelho-italia-hover: #b01b22;
+  --vermelho-italia-suave: #fee2e2;
+  --vermelho-italia-texto: #991b1b;
+  --vermelho-apagar: #cd212a;
+
+  --texto-principal: #0f172a;
+  --texto-secundario: #334155;
+  --texto-suave: #64748b;
+
   --fonte: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -21,13 +33,25 @@
 }
 
 body {
-  background-color: var(--azul-escuro-fundo);
-  color: var(--branco);
+  background-color: var(--cinza-fundo);
+  color: var(--texto-principal);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 16px 12px 48px;
+}
+
+/* Detalhe superior da bandeira da Itália */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(to right, #008c45 0%, #008c45 33.3%, #ffffff 33.3%, #ffffff 66.6%, #cd212a 66.6%, #cd212a 100%);
+  z-index: 9999;
 }
 
 #app-container {
@@ -45,38 +69,44 @@ body {
 
 /* Alertas e Mensagens */
 .mensagem {
-  padding: 12px 16px;
-  border-radius: 8px;
+  padding: 14px 16px;
+  border-radius: 10px;
   font-size: 14px;
   line-height: 1.4;
   text-align: center;
+  font-weight: 500;
 }
 
+/* Quando já foi lançado ou erro: VERMELHO */
 .mensagem.erro {
-  background-color: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #f87171;
+  background-color: var(--vermelho-italia-suave);
+  color: var(--vermelho-italia-texto);
+  border: 1.5px solid #f87171;
+  font-weight: 600;
 }
 
+/* Quando registrado pela primeira vez com sucesso: VERDE */
 .mensagem.sucesso {
-  background-color: #dcfce7;
-  color: #166534;
-  border: 1px solid #86efac;
+  background-color: var(--verde-italia-suave);
+  color: var(--verde-italia-texto);
+  border: 1.5px solid #86efac;
+  font-weight: 600;
 }
 
+/* Aviso geral */
 .mensagem.aviso {
-  background-color: #eff6ff;
-  color: #1e40af;
-  border: 1px solid #93c5fd;
+  background-color: #f1f5f9;
+  color: var(--texto-principal);
+  border: 1px solid #cbd5e1;
 }
 
 /* Cartões Base */
 .card {
-  background-color: var(--azul-escuro-card);
-  border: 1px solid var(--azul-escuro-suave);
-  border-radius: 12px;
+  background-color: var(--cinza-card);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 14px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 /* Cabeçalho da Autenticação */
@@ -89,12 +119,12 @@ body {
   font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: var(--branco);
+  color: var(--verde-italia);
   margin-bottom: 6px;
 }
 
 .auth-header p {
-  color: var(--cinza-texto);
+  color: var(--texto-suave);
   font-size: 14px;
 }
 
@@ -109,7 +139,7 @@ body {
 .campo-grupo label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--cinza-texto);
+  color: var(--texto-secundario);
 }
 
 input[type="text"],
@@ -120,9 +150,9 @@ input[type="date"],
 select {
   width: 100%;
   padding: 12px 14px;
-  background-color: var(--branco);
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background-color: var(--branco-puro);
+  color: var(--texto-principal);
+  border: 1.5px solid #cbd5e1;
   border-radius: 8px;
   font-size: 15px;
   outline: none;
@@ -131,8 +161,8 @@ select {
 
 input:focus,
 select:focus {
-  border-color: var(--azul-destaque);
-  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.25);
+  border-color: var(--verde-italia);
+  box-shadow: 0 0 0 3px rgba(0, 140, 69, 0.18);
 }
 
 .botoes-auth {
@@ -152,7 +182,7 @@ select:focus {
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: background-color 0.2s, transform 0.1s;
+  transition: background-color 0.2s, transform 0.1s, border-color 0.2s;
 }
 
 .btn:active {
@@ -160,24 +190,24 @@ select:focus {
 }
 
 .btn-primario {
-  background-color: var(--branco);
-  color: var(--azul-escuro-fundo);
+  background-color: var(--verde-italia);
+  color: var(--branco-puro);
   flex: 1;
 }
 
 .btn-primario:hover {
-  background-color: var(--cinza-claro);
+  background-color: var(--verde-italia-hover);
 }
 
 .btn-secundario {
-  background-color: transparent;
-  color: var(--branco);
-  border: 1px solid var(--branco);
+  background-color: var(--branco-puro);
+  color: var(--verde-italia);
+  border: 1.5px solid var(--verde-italia);
   flex: 1;
 }
 
 .btn-secundario:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--verde-italia-suave);
 }
 
 /* Header Principal */
@@ -185,55 +215,58 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 4px;
+  padding: 4px 4px 8px;
 }
 
 .header-principal h1 {
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: var(--branco);
+  color: var(--verde-italia);
 }
 
 .btn-sair {
-  background-color: transparent;
-  color: var(--cinza-texto);
-  border: 1px solid var(--azul-escuro-suave);
-  padding: 6px 12px;
+  background-color: var(--branco-puro);
+  color: var(--texto-suave);
+  border: 1px solid var(--cinza-borda);
+  padding: 6px 14px;
   border-radius: 6px;
   font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-sair:hover {
-  color: var(--branco);
-  border-color: var(--branco);
+  color: var(--vermelho-italia);
+  border-color: var(--vermelho-italia);
+  background-color: var(--vermelho-italia-suave);
 }
 
 /* Hero: QUANTO JÁ GASTEI NO MÊS (Primeiros 5 segundos) */
 .card-destaque {
-  background: linear-gradient(135deg, #0f2752 0%, #173873 100%);
-  border: 1px solid #234d94;
+  background-color: var(--branco-puro);
+  border: 1px solid var(--cinza-borda);
+  border-top: 4px solid var(--vermelho-italia);
   border-radius: 14px;
   padding: 24px 20px;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .destaque-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--cinza-texto);
+  color: var(--texto-suave);
   margin-bottom: 8px;
 }
 
 .destaque-valor {
   font-size: 38px;
   font-weight: 900;
-  color: var(--branco);
+  color: var(--vermelho-italia);
   letter-spacing: -1px;
 }
 
@@ -241,7 +274,7 @@ select:focus {
 .titulo-secao {
   font-size: 16px;
   font-weight: 700;
-  color: var(--branco);
+  color: var(--texto-principal);
   margin-bottom: 14px;
 }
 
@@ -261,24 +294,24 @@ select:focus {
 }
 
 .barra-item-nome {
-  color: var(--branco);
+  color: var(--texto-principal);
 }
 
 .barra-item-valor {
-  color: var(--cinza-texto);
+  color: var(--texto-suave);
 }
 
 .barra-trilho {
   width: 100%;
   height: 8px;
-  background-color: var(--azul-escuro-suave);
+  background-color: var(--cinza-borda);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .barra-progresso {
   height: 100%;
-  background-color: var(--branco);
+  background-color: var(--verde-italia);
   border-radius: 4px;
   transition: width 0.4s ease;
 }
@@ -292,7 +325,7 @@ select:focus {
 
 .gasto-vazio {
   text-align: center;
-  color: var(--cinza-texto);
+  color: var(--texto-suave);
   font-size: 14px;
   padding: 16px 0;
 }
@@ -301,11 +334,12 @@ select:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--azul-escuro-suave);
+  background-color: var(--branco-puro);
+  border: 1px solid var(--cinza-borda);
   padding: 12px 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   gap: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
 }
 
 .gasto-info {
@@ -319,7 +353,7 @@ select:focus {
 .gasto-descricao {
   font-size: 15px;
   font-weight: 600;
-  color: var(--branco);
+  color: var(--texto-principal);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -330,16 +364,17 @@ select:focus {
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: var(--cinza-texto);
+  color: var(--texto-suave);
 }
 
 .gasto-categoria-badge {
-  background-color: var(--azul-escuro-suave);
-  color: var(--branco);
-  padding: 2px 6px;
-  border-radius: 4px;
+  background-color: var(--verde-italia-suave);
+  color: var(--verde-italia-texto);
+  border: 1px solid #c8e6c9;
+  padding: 2px 8px;
+  border-radius: 6px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .gasto-valor-acao {
@@ -348,17 +383,18 @@ select:focus {
   gap: 10px;
 }
 
+/* Quando tiver lançado, valor em vermelho */
 .gasto-valor {
   font-size: 15px;
   font-weight: 700;
-  color: var(--branco);
+  color: var(--vermelho-italia);
   white-space: nowrap;
 }
 
 .btn-apagar {
-  background-color: transparent;
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background-color: var(--branco-puro);
+  color: var(--vermelho-italia);
+  border: 1px solid #fca5a5;
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 12px;
@@ -368,20 +404,21 @@ select:focus {
 }
 
 .btn-apagar:hover {
-  background-color: var(--vermelho-apagar);
-  color: var(--branco);
+  background-color: var(--vermelho-italia);
+  color: var(--branco-puro);
+  border-color: var(--vermelho-italia);
 }
 
 /* Cartão Resumo da Semana */
 #cardResumo {
-  background-color: var(--azul-escuro-card);
-  border-left: 4px solid var(--branco);
+  background-color: var(--branco-puro);
+  border-left: 4px solid var(--verde-italia);
 }
 
 .resumo-texto {
   font-size: 14px;
   line-height: 1.5;
-  color: var(--cinza-texto);
+  color: var(--texto-secundario);
   white-space: pre-wrap;
 }
 
@@ -403,9 +440,9 @@ select:focus {
 
 .btn-foto {
   width: 100%;
-  background-color: transparent;
-  color: var(--branco);
-  border: 1px dashed var(--cinza-texto);
+  background-color: var(--branco-puro);
+  color: var(--verde-italia);
+  border: 1.5px dashed var(--verde-italia);
   padding: 12px;
   border-radius: 8px;
   font-size: 14px;
@@ -417,8 +454,7 @@ select:focus {
 }
 
 .btn-foto:hover {
-  border-color: var(--branco);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--verde-italia-suave);
 }
 
 #assistenteMensagem {
