@@ -297,16 +297,39 @@ Regras:
 
     try {
       const origem = imagem ? "foto" : "texto";
+      const dataGasto = data || hoje;
+      const valorNum = Number(valor);
+
+      // --- Verificação de duplicidade ---
+      // Consulta se já existe um gasto com mesma data, valor e descrição
+      const urlCheck = `${SUPABASE_URL}/rest/v1/gastos?select=id&data=eq.${dataGasto}&valor=eq.${valorNum}&descricao=eq.${encodeURIComponent(descricao)}`;
+      const resCheck = await fetch(urlCheck, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          apikey: SUPABASE_CHAVE_PUBLICA,
+        },
+      });
+      if (resCheck.ok) {
+        const duplicados = await resCheck.json();
+        if (duplicados && duplicados.length > 0) {
+          return resposta(200, {
+            resposta: `Parece que esse gasto (${formatarMoeda(valor)} em ${descricao}) já foi lançado neste dia.`,
+            acao: null,
+          });
+        }
+      }
+      // ----------------------------------
+
       await gravarGasto(token, {
         dono: usuario.id,
-        data: data || hoje,
+        data: dataGasto,
         descricao,
-        valor: Number(valor),
+        valor: valorNum,
         categoria: categoria || "OUTROS",
         origem,
       });
 
-      const dataFormatada = (data || hoje).split("-").reverse().join("/");
+      const dataFormatada = dataGasto.split("-").reverse().join("/");
       return resposta(200, {
         resposta: `Lancei ${formatarMoeda(valor)} em ${categoria || "OUTROS"}: ${descricao}, ${dataFormatada}.`,
         acao: "gasto_registrado",
